@@ -83,7 +83,10 @@ export default function Home() {
       >
         {["Event", "Venue", "Corporate", "Hotel", "Reserve", "FAQs"].map(
           (item) => (
-            <div key={item} style={{ whiteSpace: "nowrap" }}>
+            <div
+              key={item}
+              style={{ whiteSpace: "nowrap", cursor: "pointer" }}
+            >
               {item}
             </div>
           )
@@ -92,13 +95,7 @@ export default function Home() {
 
       {/* HERO */}
       <section className="hero">
-        <video
-          autoPlay
-          muted
-          loop
-          playsInline
-          className="hero-video"
-        >
+        <video autoPlay muted loop playsInline className="hero-video">
           <source src="/video.mp4" type="video/mp4" />
         </video>
 
@@ -130,6 +127,7 @@ export default function Home() {
             >
               <img
                 src={`/flyers/${ev.flyer}`}
+                alt={ev.date}
                 style={{
                   width: "100%",
                   borderRadius: "12px",
@@ -160,11 +158,14 @@ export default function Home() {
           }
           onTouchEnd={(e) => {
             if (!touchStartX.current) return;
+
             const diff =
               e.changedTouches[0].clientX - touchStartX.current;
 
             if (diff > 50) prev();
             if (diff < -50) next();
+
+            touchStartX.current = null;
           }}
           style={{
             position: "fixed",
@@ -179,6 +180,8 @@ export default function Home() {
         >
           <img
             src={`/flyers/${selected.flyer}`}
+            alt={selected.date}
+            onClick={(e) => e.stopPropagation()}
             style={{
               maxWidth: "90%",
               maxHeight: "80%",
@@ -202,10 +205,9 @@ export default function Home() {
           opacity: 0.6,
         }}
       >
-        © 2026 ARREBATAO Nightclub - All Rights Reserved • PRIVACY • TERMS • ACCESSIBILITY • COOKIE SETTINGS • COOKIE PREFERENCES
+        ©️ 2026 ARREBATAO Nightclub - All Rights Reserved • PRIVACY • TERMS • ACCESSIBILITY • COOKIE SETTINGS • COOKIE PREFERENCES
       </footer>
 
-      {/* RESPONSIVE STYLE */}
       <style jsx>{`
         .hero {
           height: 100vh;
@@ -231,7 +233,7 @@ export default function Home() {
           height: 18%;
           background: linear-gradient(
             to top,
-            black 25%,
+            black 20%,
             transparent 100%
           );
           z-index: 1;
@@ -241,7 +243,6 @@ export default function Home() {
           z-index: 2;
         }
 
-        /* DESKTOP */
         .hero-title {
           font-size: 78px;
           letter-spacing: 12px;
@@ -255,7 +256,6 @@ export default function Home() {
           opacity: 0.75;
         }
 
-        /* MOBILE */
         @media (max-width: 768px) {
           .hero-title {
             font-size: 46px;
