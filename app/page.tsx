@@ -1,8 +1,16 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function Home() {
   const [selected, setSelected] = useState<string | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
 
   const flyers = [
     "event-01.jpeg","event-02.jpeg","event-03.jpeg","event-04.jpeg",
@@ -14,8 +22,6 @@ export default function Home() {
     "Sabato 20 Giugno 2026","Sabato 27 Giugno 2026","Sabato 04 Luglio 2026",
     "Sabato 11 Luglio 2026","Sabato 18 Luglio 2026","Sabato 25 Luglio 2026",
   ];
-
-  const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
 
   return (
     <main style={{
@@ -76,14 +82,16 @@ export default function Home() {
           position: "relative",
           zIndex: 2,
           textAlign: "center",
-          padding: "0 20px"
+          padding: "0 16px"
         }}>
 
           <h1 style={{
-            fontSize: isMobile ? "36px" : "72px",
-            letterSpacing: isMobile ? "8px" : "18px",
+            fontSize: "clamp(26px, 6vw, 72px)", // 🔥 MAGIC LINE (mai più tagliato)
+            letterSpacing: isMobile ? "3px" : "14px",
             fontWeight: 200,
-            textTransform: "uppercase"
+            textTransform: "uppercase",
+            lineHeight: "1.1",
+            whiteSpace: "nowrap"
           }}>
             ARREBATAO
           </h1>
@@ -121,9 +129,7 @@ export default function Home() {
           scrollSnapType: "x mandatory",
           WebkitOverflowScrolling: "touch",
           scrollbarWidth: "none"
-        }}
-        className="hide-scrollbar"
-        >
+        }}>
 
           {flyers.map((img, index) => (
             <div key={index} style={{
@@ -252,14 +258,16 @@ export default function Home() {
       position: "relative",
       zIndex: 2,
       textAlign: "center",
-      padding: "0 20px"
+      padding: "0 16px"
     }}>
 
       <h1 style={{
-        fontSize: isMobile ? "36px" : "72px",
-        letterSpacing: isMobile ? "8px" : "18px",
+        fontSize: "clamp(26px, 6vw, 72px)", // 🔥 MAGIC LINE (mai più tagliato)
+        letterSpacing: isMobile ? "3px" : "14px",
         fontWeight: 200,
-        textTransform: "uppercase"
+        textTransform: "uppercase",
+        lineHeight: "1.1",
+        whiteSpace: "nowrap"
       }}>
         ARREBATAO
       </h1>
@@ -297,9 +305,7 @@ export default function Home() {
       scrollSnapType: "x mandatory",
       WebkitOverflowScrolling: "touch",
       scrollbarWidth: "none"
-    }}
-    className="hide-scrollbar"
-    >
+    }}>
 
       {flyers.map((img, index) => (
         <div key={index} style={{
