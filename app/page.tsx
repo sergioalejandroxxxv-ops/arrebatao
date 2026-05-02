@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
 
 export default function Home() {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
@@ -16,17 +16,16 @@ export default function Home() {
 
   const events = [
     { id: 0, flyer: "event-01.jpeg", date: "Sabato 30 Maggio 2026", soldPercentage: 92,
-      photosStandard: ["/photos/standard/event-01-1.jpeg", "/photos/standard/event-01-2.jpeg", "/photos/standard/event-01-3.jpeg"],
-      photosExperimental: ["/photos/experimental/event-01-1.jpeg", "/photos/experimental/event-01-2.jpeg", "/photos/experimental/event-01-3.jpeg"] },
+      photosStandard: ["/photos/standard/event-01-1.jpeg","/photos/standard/event-01-2.jpeg","/photos/standard/event-01-3.jpeg"],
+      photosExperimental: ["/photos/experimental/event-01-1.jpeg","/photos/experimental/event-01-2.jpeg","/photos/experimental/event-01-3.jpeg"] },
     { id: 1, flyer: "event-02.jpeg", date: "Sabato 06 Giugno 2026", soldPercentage: 45,
-      photosStandard: ["/photos/standard/event-02-1.jpeg", "/photos/standard/event-02-2.jpeg", "/photos/standard/event-02-3.jpeg"],
-      photosExperimental: ["/photos/experimental/event-02-1.jpeg", "/photos/experimental/event-02-2.jpeg", "/photos/experimental/event-02-3.jpeg"] },
+      photosStandard: ["/photos/standard/event-02-1.jpeg","/photos/standard/event-02-2.jpeg","/photos/standard/event-02-3.jpeg"],
+      photosExperimental: ["/photos/experimental/event-02-1.jpeg","/photos/experimental/event-02-2.jpeg","/photos/experimental/event-02-3.jpeg"] },
     { id: 2, flyer: "event-03.jpeg", date: "Sabato 13 Giugno 2026", soldPercentage: 78,
-      photosStandard: ["/photos/standard/event-03-1.jpeg", "/photos/standard/event-03-2.jpeg"],
-      photosExperimental: ["/photos/experimental/event-03-1.jpeg", "/photos/experimental/event-03-2.jpeg"] },
+      photosStandard: ["/photos/standard/event-03-1.jpeg","/photos/standard/event-03-2.jpeg"],
+      photosExperimental: ["/photos/experimental/event-03-1.jpeg","/photos/experimental/event-03-2.jpeg"] },
     { id: 3, flyer: "event-04.jpeg", date: "Sabato 20 Giugno 2026", soldPercentage: 100,
-      photosStandard: ["/photos/standard/event-04-1.jpeg"],
-      photosExperimental: [] },
+      photosStandard: ["/photos/standard/event-04-1.jpeg"], photosExperimental: [] },
     { id: 4, flyer: "event-05.jpeg", date: "Sabato 27 Giugno 2026", soldPercentage: 33, photosStandard: [], photosExperimental: [] },
     { id: 5, flyer: "event-06.jpeg", date: "Sabato 04 Luglio 2026", soldPercentage: 65, photosStandard: [], photosExperimental: [] },
     { id: 6, flyer: "event-07.jpeg", date: "Sabato 11 Luglio 2026", soldPercentage: 88, photosStandard: [], photosExperimental: [] },
@@ -39,11 +38,10 @@ export default function Home() {
     ? (selectedPhotoType === 'standard' ? selectedEvent.photosStandard : selectedEvent.photosExperimental) 
     : [];
 
-  // === PERSISTENZA STATO (non torna alla home al refresh) ===
+  // Persistenza stato
   useEffect(() => {
     const savedSection = localStorage.getItem("activeSection");
     const savedEvent = localStorage.getItem("selectedIndex");
-
     if (savedSection) setActiveSection(savedSection);
     if (savedEvent) setSelectedIndex(parseInt(savedEvent));
   }, []);
@@ -51,17 +49,15 @@ export default function Home() {
   useEffect(() => {
     if (activeSection) localStorage.setItem("activeSection", activeSection);
     else localStorage.removeItem("activeSection");
-
     if (selectedIndex !== null) localStorage.setItem("selectedIndex", selectedIndex.toString());
     else localStorage.removeItem("selectedIndex");
   }, [activeSection, selectedIndex]);
 
-  const nextPhoto = () => setCurrentPhotoIndex((prev) => (prev + 1) % currentPhotos.length);
-  const prevPhoto = () => setCurrentPhotoIndex((prev) => (prev - 1 + currentPhotos.length) % currentPhotos.length);
+  const nextPhoto = () => setCurrentPhotoIndex(p => (p + 1) % currentPhotos.length);
+  const prevPhoto = () => setCurrentPhotoIndex(p => (p - 1 + currentPhotos.length) % currentPhotos.length);
 
   useEffect(() => {
     if (!selectedIndex && !activeSection && !showPhotoGallery && !showInfoModal) return;
-
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         if (showPhotoGallery) setShowPhotoGallery(false);
@@ -69,25 +65,20 @@ export default function Home() {
         else if (selectedIndex !== null) setSelectedIndex(null);
         else setActiveSection(null);
       }
-      if (showPhotoGallery && e.key === "ArrowRight") nextPhoto();
-      if (showPhotoGallery && e.key === "ArrowLeft") prevPhoto();
+      if (showPhotoGallery) {
+        if (e.key === "ArrowRight") nextPhoto();
+        if (e.key === "ArrowLeft") prevPhoto();
+      }
     };
-
     document.body.style.overflow = "hidden";
     window.addEventListener("keydown", handleKeyDown);
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-      document.body.style.overflow = "visible";
-    };
+    return () => { window.removeEventListener("keydown", handleKeyDown); document.body.style.overflow = "visible"; };
   }, [selectedIndex, activeSection, showPhotoGallery, showInfoModal]);
 
   const downloadImage = (src: string, filename: string) => {
     const link = document.createElement("a");
-    link.href = src;
-    link.download = filename;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    link.href = src; link.download = filename;
+    document.body.appendChild(link); link.click(); document.body.removeChild(link);
   };
 
   return (
@@ -95,8 +86,8 @@ export default function Home() {
 
       {/* NAV */}
       <div style={{ position: "fixed", top: "20px", right: "20px", zIndex: 1000, display: "flex", gap: "18px", fontSize: "12px", letterSpacing: "2px", textTransform: "uppercase", fontWeight: 300 }}>
-        {navItems.map((item) => (
-          <button key={item} onClick={() => setActiveSection(item)} style={{ cursor: "pointer", opacity: 0.8, background: "none", border: "none", color: "inherit", font: "inherit", padding: 0, flexShrink: 0, whiteSpace: "nowrap" }}>
+        {navItems.map(item => (
+          <button key={item} onClick={() => setActiveSection(item)} style={{ cursor: "pointer", opacity: 0.8, background: "none", border: "none", color: "inherit", font: "inherit", padding: 0 }}>
             {item}
           </button>
         ))}
@@ -119,16 +110,14 @@ export default function Home() {
       <section style={{ padding: "80px 0 80px 20px" }}>
         <div style={{ display: "flex", gap: "18px", overflowX: "auto", paddingRight: "20px", paddingBottom: "20px", scrollSnapType: "x mandatory", scrollbarWidth: "none" }}>
           {events.map((event, index) => (
-            <div key={index} style={{ minWidth: "260px", scrollSnapAlign: "start" }}>
-              <div onClick={() => setSelectedIndex(index)} style={{ width: "100%", aspectRatio: "9 / 16", borderRadius: "16px", overflow: "hidden", cursor: "pointer" }}>
+            <button key={index} onClick={() => setSelectedIndex(index)} style={{ minWidth: "260px", scrollSnapAlign: "start", background: "none", border: "none", padding: 0, cursor: "pointer", textAlign: "left" }}>
+              <div style={{ width: "100%", aspectRatio: "9 / 16", borderRadius: "16px", overflow: "hidden" }}>
                 <img src={`/flyers/${event.flyer}`} alt={`ARREBATAO event flyer for ${event.date}`} loading="lazy"
                   onContextMenu={(e) => { e.preventDefault(); downloadImage(`/flyers/${event.flyer}`, `ARREBATAO-${event.date}.jpg`); }}
                   style={{ width: "100%", height: "100%", objectFit: "cover" }} />
               </div>
-              <p onClick={() => setSelectedIndex(index)} style={{ marginTop: "12px", fontSize: "13px", opacity: 0.7, textAlign: "center", letterSpacing: "1px", cursor: "pointer" }}>
-                {event.date}
-              </p>
-            </div>
+              <div style={{ marginTop: "12px", fontSize: "13px", opacity: 0.7, textAlign: "center", letterSpacing: "1px" }}>{event.date}</div>
+            </button>
           ))}
         </div>
       </section>
@@ -232,7 +221,6 @@ export default function Home() {
           <img 
             src={currentPhotos[currentPhotoIndex]} 
             alt="Event photo" 
-            onError={(e) => { (e.target as HTMLImageElement).src = "https://picsum.photos/id/1015/800/1200"; }} 
             onContextMenu={(e) => { e.preventDefault(); downloadImage(currentPhotos[currentPhotoIndex], `ARREBATAO-${selectedEvent.date}-${selectedPhotoType}.jpg`); }}
             style={{ maxWidth: "92%", maxHeight: "85%", objectFit: "contain", borderRadius: "12px" }} 
           />
