@@ -1,9 +1,13 @@
 "use client";
-import { useState, useEffect } from "react";
+
+import { useEffect, useRef, useState } from "react";
 
 export default function Home() {
-  const [selected, setSelected] = useState<string | null>(null);
-  const [isMobile, setIsMobile] = useState<boolean | null>(null);
+  const [index, setIndex] = useState<number | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
+  const pressTimer = useRef<NodeJS.Timeout | null>(null);
+
+  const flyers = Array.from({ length: 9 }, (_, i) => `event-0${i + 1}.jpeg`);
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768);
@@ -12,55 +16,48 @@ export default function Home() {
     return () => window.removeEventListener("resize", check);
   }, []);
 
-  const mobile = isMobile ?? false;
+  const handleDownload = async (img: string) => {
+    const res = await fetch(`/flyers/${img}`);
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
 
-  const flyers = [
-    "event-01.jpeg","event-02.jpeg","event-03.jpeg","event-04.jpeg",
-    "event-05.jpeg","event-06.jpeg","event-07.jpeg","event-08.jpeg","event-09.jpeg",
-  ];
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = img;
+    a.click();
 
-  const dates = [
-    "Sabato 30 Maggio 2026","Sabato 06 Giugno 2026","Sabato 13 Giugno 2026",
-    "Sabato 20 Giugno 2026","Sabato 27 Giugno 2026","Sabato 04 Luglio 2026",
-    "Sabato 11 Luglio 2026","Sabato 18 Luglio 2026","Sabato 25 Luglio 2026",
-  ];
+    URL.revokeObjectURL(url);
+  };
+
+  const openViewer = (i: number) => setIndex(i);
+
+  const closeViewer = () => setIndex(null);
+
+  const next = () => {
+    if (index === null) return;
+    setIndex((index + 1) % flyers.length);
+  };
+
+  const prev = () => {
+    if (index === null) return;
+    setIndex((index - 1 + flyers.length) % flyers.length);
+  };
 
   return (
     <main style={{
-      background: "black",
-      color: "white",
-      minHeight: "100vh",
+      background: "#000",
+      color: "#fff",
       fontFamily: "system-ui, -apple-system, sans-serif",
       overflowX: "hidden"
     }}>
 
-      {/* NAV */}
-      <div style={{
-        position: "fixed",
-        top: "16px",
-        right: "16px",
-        zIndex: 1000,
-        display: "flex",
-        gap: mobile ? "10px" : "18px",
-        fontSize: mobile ? "11px" : "12px",
-        letterSpacing: mobile ? "1px" : "2px",
-        textTransform: "uppercase",
-        fontWeight: 300,
-      }}>
-        {["Events","Venue","Corporate","Hotel","Reserve","Faqs"].map(item => (
-          <span key={item} style={{ cursor: "pointer", opacity: 0.8 }}>
-            {item}
-          </span>
-        ))}
-      </div>
-
       {/* HERO */}
       <section style={{
-        position: "relative",
         height: "100vh",
+        position: "relative",
         display: "flex",
-        justifyContent: "center",
         alignItems: "center",
+        justifyContent: "center",
         overflow: "hidden"
       }}>
 
@@ -69,7 +66,7 @@ export default function Home() {
           width: "100%",
           height: "100%",
           objectFit: "cover",
-          transform: mobile ? "scale(1.2)" : "scale(1)"
+          transform: isMobile ? "scale(1.15)" : "scale(1)"
         }}>
           <source src="/video.mp4" type="video/mp4" />
         </video>
@@ -77,80 +74,84 @@ export default function Home() {
         <div style={{
           position: "absolute",
           inset: 0,
-          background: "rgba(0,0,0,0.55)"
+          background: "linear-gradient(to bottom, rgba(0,0,0,.3), rgba(0,0,0,.9))"
         }} />
 
         <div style={{
           position: "relative",
-          zIndex: 2,
           textAlign: "center",
-          padding: "0 16px"
+          width: "100%",
+          padding: isMobile ? "0 4px" : "0 20px"
         }}>
 
+          {/* 🔥 FIX DEFINITIVO ARREBATAO */}
           <h1 style={{
-            fontSize: "clamp(34px, 8vw, 72px)",
-            letterSpacing: mobile ? "6px" : "14px",
+            fontSize: isMobile
+              ? "clamp(58px, 22vw, 88px)"   // quasi full iPhone width
+              : "78px",
+            letterSpacing: isMobile ? "3px" : "14px",
             fontWeight: 200,
             textTransform: "uppercase",
-            lineHeight: "1.05",
-            textAlign: "center",
-            width: "100%",
-            maxWidth: "100%",
-            whiteSpace: "normal",
-            wordBreak: "break-word",
-            padding: "0 12px"
+            lineHeight: 0.95,
+            margin: 0
           }}>
             ARREBATAO
           </h1>
 
           <p style={{
-            marginTop: "12px",
-            fontSize: mobile ? "14px" : "16px",
-            opacity: 0.8
+            marginTop: 14,
+            opacity: 0.75,
+            fontSize: isMobile ? "13px" : "16px"
           }}>
             Milan • Luxury Night Experience
           </p>
 
         </div>
 
-        {/* FADE */}
         <div style={{
           position: "absolute",
           bottom: 0,
-          left: 0,
-          right: 0,
-          height: "180px",
-          background: "linear-gradient(to bottom, rgba(0,0,0,0), black)"
+          height: 200,
+          width: "100%",
+          background: "linear-gradient(to bottom, transparent, #000)"
         }} />
-
       </section>
 
       {/* FLYERS */}
-      <section style={{ padding: "80px 0 80px 20px" }}>
+      <section style={{
+        padding: "60px 0 90px 18px"
+      }}>
         <div style={{
           display: "flex",
-          gap: "18px",
+          gap: 16,
           overflowX: "auto",
-          paddingBottom: "20px",
-          paddingRight: "20px",
           scrollSnapType: "x mandatory",
-          WebkitOverflowScrolling: "touch",
-          scrollbarWidth: "none",
-          scrollPaddingLeft: "20px"
+          WebkitOverflowScrolling: "touch"
         }}>
 
-          {flyers.map((img, index) => (
-            <div key={index} style={{
-              minWidth: mobile ? "200px" : "260px",
+          {flyers.map((img, i) => (
+            <div key={img} style={{
+              minWidth: isMobile ? 210 : 260,
               scrollSnapAlign: "start"
             }}>
 
               <div
-                onClick={() => setSelected(img)}
+                onClick={() => openViewer(i)}
+                onContextMenu={(e) => {
+                  e.preventDefault();
+                  handleDownload(img);
+                }}
+                onPointerDown={() => {
+                  pressTimer.current = setTimeout(() => {
+                    handleDownload(img);
+                  }, 600);
+                }}
+                onPointerUp={() => {
+                  if (pressTimer.current) clearTimeout(pressTimer.current);
+                }}
                 style={{
-                  width: "100%",
                   aspectRatio: "9/16",
-                  borderRadius: "16px",
+                  borderRadius: 18,
                   overflow: "hidden",
                   cursor: "pointer"
                 }}
@@ -165,47 +166,70 @@ export default function Home() {
                 />
               </div>
 
-              <p style={{
-                marginTop: "10px",
-                fontSize: "12px",
-                opacity: 0.7,
-                textAlign: "center"
-              }}>
-                {dates[index]}
-              </p>
-
             </div>
           ))}
         </div>
       </section>
 
-      {/* MODAL */}
-      {selected && (
+      {/* 🔥 FULL SCREEN SWIPE VIEWER */}
+      {index !== null && (
         <div
-          onClick={() => setSelected(null)}
           style={{
             position: "fixed",
             inset: 0,
-            zIndex: 999,
+            background: "rgba(0,0,0,0.95)",
+            zIndex: 9999,
             display: "flex",
-            justifyContent: "center",
             alignItems: "center",
-            background: "rgba(0,0,0,0.5)",
-            backdropFilter: "blur(16px)"
+            justifyContent: "center"
           }}
         >
+
+          {/* close */}
           <div
-            onClick={e => e.stopPropagation()}
+            onClick={closeViewer}
             style={{
-              width: "90%",
-              maxWidth: "520px",
+              position: "absolute",
+              top: 20,
+              right: 20,
+              fontSize: 18,
+              cursor: "pointer",
+              opacity: 0.7
+            }}
+          >
+            ✕
+          </div>
+
+          {/* prev */}
+          <div
+            onClick={prev}
+            style={{
+              position: "absolute",
+              left: 10,
+              fontSize: 30,
+              cursor: "pointer",
+              opacity: 0.6
+            }}
+          >
+            ‹
+          </div>
+
+          {/* image */}
+          <div
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
+            style={{
+              width: "92%",
+              maxWidth: 520,
               aspectRatio: "9/16",
-              borderRadius: "18px",
-              overflow: "hidden"
+              borderRadius: 18,
+              overflow: "hidden",
+              animation: "pop .2s ease"
             }}
           >
             <img
-              src={`/flyers/${selected}`}
+              src={`/flyers/${flyers[index]}`}
               style={{
                 width: "100%",
                 height: "100%",
@@ -213,21 +237,30 @@ export default function Home() {
               }}
             />
           </div>
+
+          {/* next */}
+          <div
+            onClick={next}
+            style={{
+              position: "absolute",
+              right: 10,
+              fontSize: 30,
+              cursor: "pointer",
+              opacity: 0.6
+            }}
+          >
+            ›
+          </div>
+
         </div>
       )}
 
-      {/* FOOTER */}
-      <footer style={{
-        padding: "40px 20px",
-        marginTop: "60px",
-        borderTop: "1px solid rgba(255,255,255,0.1)",
-        fontSize: "11px",
-        opacity: 0.6,
-        textAlign: "center"
-      }}>
-        ©️ 2026 ARREBATAO Nightclub - All Rights Reserved.  
-        PRIVACY • TERMS • ACCESSIBILITY • COOKIE SETTINGS • COOKIE PREFERENCES
-      </footer>
+      <style jsx>{`
+        @keyframes pop {
+          from { transform: scale(.92); opacity: 0 }
+          to { transform: scale(1); opacity: 1 }
+        }
+      `}</style>
 
     </main>
   );
