@@ -77,16 +77,11 @@ export default function Home() {
           letterSpacing: "2px",
           textTransform: "uppercase",
           fontWeight: 300,
-          overflowX: "auto",
-          scrollbarWidth: "none",
         }}
       >
         {["Event", "Venue", "Corporate", "Hotel", "Reserve", "FAQs"].map(
           (item) => (
-            <div
-              key={item}
-              style={{ whiteSpace: "nowrap", cursor: "pointer" }}
-            >
+            <div key={item} style={{ cursor: "pointer" }}>
               {item}
             </div>
           )
@@ -131,7 +126,6 @@ export default function Home() {
                 style={{
                   width: "100%",
                   borderRadius: "12px",
-                  objectFit: "cover",
                 }}
               />
               <p
@@ -205,7 +199,7 @@ export default function Home() {
           opacity: 0.6,
         }}
       >
-        ©️ 2026 ARREBATAO Nightclub - All Rights Reserved • PRIVACY • TERMS • ACCESSIBILITY • COOKIE SETTINGS • COOKIE PREFERENCES
+        ©️ 2026 ARREBATAO Nightclub - All Rights Reserved
       </footer>
 
       <style jsx>{`
@@ -223,23 +217,26 @@ export default function Home() {
           width: 100%;
           height: 100%;
           object-fit: cover;
+          object-position: center;
           z-index: 0;
+          pointer-events: none;
         }
 
         .hero-fade {
           position: absolute;
           bottom: 0;
           width: 100%;
-          height: 18%;
+          height: 20%;
           background: linear-gradient(
             to top,
-            black 20%,
+            black 30%,
             transparent 100%
           );
           z-index: 1;
         }
 
         .hero-content {
+          position: relative;
           z-index: 2;
         }
 
@@ -257,6 +254,10 @@ export default function Home() {
         }
 
         @media (max-width: 768px) {
+          .hero-video {
+            object-position: center top;
+          }
+
           .hero-title {
             font-size: 46px;
             letter-spacing: 8px;
