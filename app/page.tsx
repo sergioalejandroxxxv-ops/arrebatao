@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 
 export default function Home() {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  const touchStartX = useRef<number | null>(null);
 
   const events = [
     { flyer: "event-01.jpeg", date: "Sabato 30 Maggio 2026" },
@@ -17,9 +18,21 @@ export default function Home() {
     { flyer: "event-09.jpeg", date: "Sabato 25 Luglio 2026" },
   ];
 
-  const touchStartX = useRef<number | null>(null);
-
   const selected = selectedIndex !== null ? events[selectedIndex] : null;
+
+  const next = () => {
+    setSelectedIndex((prev) => {
+      if (prev === null) return 0;
+      return (prev + 1) % events.length;
+    });
+  };
+
+  const prev = () => {
+    setSelectedIndex((prev) => {
+      if (prev === null) return 0;
+      return (prev - 1 + events.length) % events.length;
+    });
+  };
 
   useEffect(() => {
     if (selectedIndex === null) return;
@@ -41,27 +54,12 @@ export default function Home() {
     };
   }, [selectedIndex]);
 
-  const next = () => {
-    setSelectedIndex((prev) => {
-      if (prev === null) return 0;
-      return (prev + 1) % events.length;
-    });
-  };
-
-  const prev = () => {
-    setSelectedIndex((prev) => {
-      if (prev === null) return 0;
-      return (prev - 1 + events.length) % events.length;
-    });
-  };
-
   return (
     <main
       style={{
         background: "black",
         color: "white",
         minHeight: "100vh",
-        position: "relative",
         overflowX: "hidden",
         fontFamily: "system-ui, -apple-system, sans-serif",
       }}
@@ -80,13 +78,12 @@ export default function Home() {
           textTransform: "uppercase",
           fontWeight: 300,
           overflowX: "auto",
-          WebkitOverflowScrolling: "touch",
           scrollbarWidth: "none",
         }}
       >
         {["Event", "Venue", "Corporate", "Hotel", "Reserve", "FAQs"].map(
           (item) => (
-            <div key={item} style={{ whiteSpace: "nowrap", cursor: "pointer" }}>
+            <div key={item} style={{ whiteSpace: "nowrap" }}>
               {item}
             </div>
           )
@@ -120,7 +117,6 @@ export default function Home() {
           <source src="/video.mp4" type="video/mp4" />
         </video>
 
-        {/* fade più sottile */}
         <div
           style={{
             position: "absolute",
@@ -128,7 +124,7 @@ export default function Home() {
             width: "100%",
             height: "18%",
             background:
-              "linear-gradient(to top, black 20%, transparent 100%)",
+              "linear-gradient(to top, black 25%, transparent 100%)",
             zIndex: 1,
           }}
         />
@@ -136,8 +132,8 @@ export default function Home() {
         <div style={{ zIndex: 2 }}>
           <h1
             style={{
-              fontSize: "74px",
-              letterSpacing: "10px",
+              fontSize: "78px", // +2 STEP DESKTOP
+              letterSpacing: "12px",
               fontWeight: 300,
             }}
           >
@@ -147,7 +143,7 @@ export default function Home() {
             style={{
               marginTop: "12px",
               fontSize: "18px",
-              letterSpacing: "4px",
+              letterSpacing: "5px",
               opacity: 0.75,
             }}
           >
@@ -170,10 +166,7 @@ export default function Home() {
             <div
               key={i}
               onClick={() => setSelectedIndex(i)}
-              style={{
-                cursor: "pointer",
-                textAlign: "center",
-              }}
+              style={{ cursor: "pointer", textAlign: "center" }}
             >
               <img
                 src={`/flyers/${ev.flyer}`}
@@ -198,10 +191,20 @@ export default function Home() {
         </div>
       </section>
 
-      {/* MODAL */}
+      {/* MODAL (SWIPE RIPRISTINATO) */}
       {selected && selectedIndex !== null && (
         <div
           onClick={() => setSelectedIndex(null)}
+          onTouchStart={(e) =>
+            (touchStartX.current = e.touches[0].clientX)
+          }
+          onTouchEnd={(e) => {
+            if (!touchStartX.current) return;
+            const diff = e.changedTouches[0].clientX - touchStartX.current;
+
+            if (diff > 50) prev();
+            if (diff < -50) next();
+          }}
           style={{
             position: "fixed",
             inset: 0,
@@ -209,8 +212,8 @@ export default function Home() {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            zIndex: 2000,
             flexDirection: "column",
+            zIndex: 2000,
           }}
         >
           <img
@@ -222,13 +225,7 @@ export default function Home() {
             }}
           />
 
-          <p
-            style={{
-              marginTop: "20px",
-              fontSize: "14px",
-              letterSpacing: "2px",
-            }}
-          >
+          <p style={{ marginTop: 20, letterSpacing: 2 }}>
             {selected.date}
           </p>
         </div>
@@ -244,7 +241,7 @@ export default function Home() {
           opacity: 0.6,
         }}
       >
-        © 2026 ARREBATAO Nightclub - All Rights Reserved • PRIVACY • TERMS • ACCESSIBILITY
+        © 2026 ARREBATAO Nightclub - All Rights Reserved • PRIVACY • TERMS • ACCESSIBILITY • COOKIE SETTINGS • COOKIE PREFERENCES
       </footer>
     </main>
   );
