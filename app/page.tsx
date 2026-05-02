@@ -86,15 +86,15 @@ export default function Home() {
         }}>
 
           <h1 style={{
-            fontSize: "clamp(26px, 6vw, 72px)", // 🔥 MAGIC LINE (mai più tagliato)
-            letterSpacing: isMobile ? "3px" : "14px",
-            fontWeight: 200,
-            textTransform: "uppercase",
-            lineHeight: "1.1",
-            whiteSpace: "nowrap"
-          }}>
-            ARREBATAO
-          </h1>
+  fontSize: "clamp(24px, 7vw, 72px)",
+  letterSpacing: "clamp(2px, 1vw, 18px)",
+  fontWeight: 200,
+  textTransform: "uppercase",
+  lineHeight: "1.1",
+  textAlign: "center"
+}}>
+  ARREBATAO
+</h1>
 
           <p style={{
             marginTop: "12px",
