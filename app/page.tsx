@@ -120,14 +120,15 @@ export default function Home() {
           <source src="/video.mp4" type="video/mp4" />
         </video>
 
+        {/* fade più sottile */}
         <div
           style={{
             position: "absolute",
             bottom: 0,
             width: "100%",
-            height: "40%",
+            height: "18%",
             background:
-              "linear-gradient(to top, black 10%, transparent 100%)",
+              "linear-gradient(to top, black 20%, transparent 100%)",
             zIndex: 1,
           }}
         />
@@ -135,8 +136,8 @@ export default function Home() {
         <div style={{ zIndex: 2 }}>
           <h1
             style={{
-              fontSize: "60px",
-              letterSpacing: "6px",
+              fontSize: "74px",
+              letterSpacing: "10px",
               fontWeight: 300,
             }}
           >
@@ -144,10 +145,10 @@ export default function Home() {
           </h1>
           <p
             style={{
-              marginTop: "10px",
-              fontSize: "14px",
-              letterSpacing: "3px",
-              opacity: 0.7,
+              marginTop: "12px",
+              fontSize: "18px",
+              letterSpacing: "4px",
+              opacity: 0.75,
             }}
           >
             Milan • Luxury Night Experience
@@ -160,8 +161,9 @@ export default function Home() {
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
-            gap: "20px",
+            gridTemplateColumns:
+              "repeat(auto-fit, minmax(140px, 1fr))",
+            gap: "18px",
           }}
         >
           {events.map((ev, i) => (
@@ -178,7 +180,6 @@ export default function Home() {
                 style={{
                   width: "100%",
                   borderRadius: "12px",
-                  transition: "0.3s",
                   objectFit: "cover",
                 }}
               />
@@ -201,16 +202,6 @@ export default function Home() {
       {selected && selectedIndex !== null && (
         <div
           onClick={() => setSelectedIndex(null)}
-          onTouchStart={(e) =>
-            (touchStartX.current = e.touches[0].clientX)
-          }
-          onTouchEnd={(e) => {
-            if (!touchStartX.current) return;
-            const diff = e.changedTouches[0].clientX - touchStartX.current;
-
-            if (diff > 50) prev();
-            if (diff < -50) next();
-          }}
           style={{
             position: "fixed",
             inset: 0,
@@ -228,7 +219,6 @@ export default function Home() {
               maxWidth: "90%",
               maxHeight: "80%",
               borderRadius: "12px",
-              objectFit: "contain",
             }}
           />
 
@@ -240,10 +230,6 @@ export default function Home() {
             }}
           >
             {selected.date}
-          </p>
-
-          <p style={{ fontSize: "10px", opacity: 0.5, marginTop: "5px" }}>
-            Swipe or use arrows
           </p>
         </div>
       )}
@@ -258,7 +244,7 @@ export default function Home() {
           opacity: 0.6,
         }}
       >
-        2026 ARREBATAO Nightclub - All Rights Reserved • PRIVACY • TERMS • ACCESSIBILITY
+        © 2026 ARREBATAO Nightclub - All Rights Reserved • PRIVACY • TERMS • ACCESSIBILITY
       </footer>
     </main>
   );
