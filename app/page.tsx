@@ -15,50 +15,18 @@ export default function Home() {
   const footerItems = ["PRIVACY", "TERMS", "ACCESSIBILITY", "COOKIE SETTINGS", "COOKIE PREFERENCES"];
 
   const events = [
-    { 
-      id: 0, flyer: "event-01.jpeg", date: "Sabato 30 Maggio 2026", soldPercentage: 92,
-      photosStandard: [
-        "/photos/standard/event-01-1.jpeg",
-        "/photos/standard/event-01-2.jpeg",
-        "/photos/standard/event-01-3.jpeg"
-      ],
-      photosExperimental: [
-        "/photos/experimental/event-01-1.jpeg",
-        "/photos/experimental/event-01-2.jpeg",
-        "/photos/experimental/event-01-3.jpeg"
-      ]
-    },
-    { 
-      id: 1, flyer: "event-02.jpeg", date: "Sabato 06 Giugno 2026", soldPercentage: 45,
-      photosStandard: [
-        "/photos/standard/event-02-1.jpeg",
-        "/photos/standard/event-02-2.jpeg",
-        "/photos/standard/event-02-3.jpeg"
-      ],
-      photosExperimental: [
-        "/photos/experimental/event-02-1.jpeg",
-        "/photos/experimental/event-02-2.jpeg",
-        "/photos/experimental/event-02-3.jpeg"
-      ]
-    },
-    { 
-      id: 2, flyer: "event-03.jpeg", date: "Sabato 13 Giugno 2026", soldPercentage: 78,
-      photosStandard: [
-        "/photos/standard/event-03-1.jpeg",
-        "/photos/standard/event-03-2.jpeg"
-      ],
-      photosExperimental: [
-        "/photos/experimental/event-03-1.jpeg",
-        "/photos/experimental/event-03-2.jpeg"
-      ]
-    },
-    { 
-      id: 3, flyer: "event-04.jpeg", date: "Sabato 20 Giugno 2026", soldPercentage: 100,
-      photosStandard: [
-        "/photos/standard/event-04-1.jpeg"
-      ],
-      photosExperimental: []   // per ora nessuna foto experimental
-    },
+    { id: 0, flyer: "event-01.jpeg", date: "Sabato 30 Maggio 2026", soldPercentage: 92,
+      photosStandard: ["/photos/standard/event-01-1.jpeg", "/photos/standard/event-01-2.jpeg", "/photos/standard/event-01-3.jpeg"],
+      photosExperimental: ["/photos/experimental/event-01-1.jpeg", "/photos/experimental/event-01-2.jpeg", "/photos/experimental/event-01-3.jpeg"] },
+    { id: 1, flyer: "event-02.jpeg", date: "Sabato 06 Giugno 2026", soldPercentage: 45,
+      photosStandard: ["/photos/standard/event-02-1.jpeg", "/photos/standard/event-02-2.jpeg", "/photos/standard/event-02-3.jpeg"],
+      photosExperimental: ["/photos/experimental/event-02-1.jpeg", "/photos/experimental/event-02-2.jpeg", "/photos/experimental/event-02-3.jpeg"] },
+    { id: 2, flyer: "event-03.jpeg", date: "Sabato 13 Giugno 2026", soldPercentage: 78,
+      photosStandard: ["/photos/standard/event-03-1.jpeg", "/photos/standard/event-03-2.jpeg"],
+      photosExperimental: ["/photos/experimental/event-03-1.jpeg", "/photos/experimental/event-03-2.jpeg"] },
+    { id: 3, flyer: "event-04.jpeg", date: "Sabato 20 Giugno 2026", soldPercentage: 100,
+      photosStandard: ["/photos/standard/event-04-1.jpeg"],
+      photosExperimental: [] },
     { id: 4, flyer: "event-05.jpeg", date: "Sabato 27 Giugno 2026", soldPercentage: 33, photosStandard: [], photosExperimental: [] },
     { id: 5, flyer: "event-06.jpeg", date: "Sabato 04 Luglio 2026", soldPercentage: 65, photosStandard: [], photosExperimental: [] },
     { id: 6, flyer: "event-07.jpeg", date: "Sabato 11 Luglio 2026", soldPercentage: 88, photosStandard: [], photosExperimental: [] },
@@ -70,6 +38,23 @@ export default function Home() {
   const currentPhotos = selectedEvent 
     ? (selectedPhotoType === 'standard' ? selectedEvent.photosStandard : selectedEvent.photosExperimental) 
     : [];
+
+  // === PERSISTENZA STATO (non torna alla home al refresh) ===
+  useEffect(() => {
+    const savedSection = localStorage.getItem("activeSection");
+    const savedEvent = localStorage.getItem("selectedIndex");
+
+    if (savedSection) setActiveSection(savedSection);
+    if (savedEvent) setSelectedIndex(parseInt(savedEvent));
+  }, []);
+
+  useEffect(() => {
+    if (activeSection) localStorage.setItem("activeSection", activeSection);
+    else localStorage.removeItem("activeSection");
+
+    if (selectedIndex !== null) localStorage.setItem("selectedIndex", selectedIndex.toString());
+    else localStorage.removeItem("selectedIndex");
+  }, [activeSection, selectedIndex]);
 
   const nextPhoto = () => setCurrentPhotoIndex((prev) => (prev + 1) % currentPhotos.length);
   const prevPhoto = () => setCurrentPhotoIndex((prev) => (prev - 1 + currentPhotos.length) % currentPhotos.length);
@@ -108,9 +93,6 @@ export default function Home() {
   return (
     <main style={{ background: "black", color: "white", minHeight: "100vh", overflowX: "hidden", fontFamily: "system-ui, -apple-system, sans-serif" }}>
 
-      {/* NAV + HERO + FLYERS + FOOTER (uguale a prima) */}
-      {/* ... mantengo tutto identico ... */}
-
       {/* NAV */}
       <div style={{ position: "fixed", top: "20px", right: "20px", zIndex: 1000, display: "flex", gap: "18px", fontSize: "12px", letterSpacing: "2px", textTransform: "uppercase", fontWeight: 300 }}>
         {navItems.map((item) => (
@@ -139,13 +121,9 @@ export default function Home() {
           {events.map((event, index) => (
             <div key={index} style={{ minWidth: "260px", scrollSnapAlign: "start" }}>
               <div onClick={() => setSelectedIndex(index)} style={{ width: "100%", aspectRatio: "9 / 16", borderRadius: "16px", overflow: "hidden", cursor: "pointer" }}>
-                <img 
-                  src={`/flyers/${event.flyer}`} 
-                  alt={`ARREBATAO event flyer for ${event.date}`}
-                  loading="lazy"
+                <img src={`/flyers/${event.flyer}`} alt={`ARREBATAO event flyer for ${event.date}`} loading="lazy"
                   onContextMenu={(e) => { e.preventDefault(); downloadImage(`/flyers/${event.flyer}`, `ARREBATAO-${event.date}.jpg`); }}
-                  style={{ width: "100%", height: "100%", objectFit: "cover" }} 
-                />
+                  style={{ width: "100%", height: "100%", objectFit: "cover" }} />
               </div>
               <p onClick={() => setSelectedIndex(index)} style={{ marginTop: "12px", fontSize: "13px", opacity: 0.7, textAlign: "center", letterSpacing: "1px", cursor: "pointer" }}>
                 {event.date}
@@ -164,9 +142,6 @@ export default function Home() {
           </button>
         ))}
       </footer>
-
-      {/* SEZIONE NERA + EVENT DETAIL + PHOTO GALLERY + INFO MODAL (stesso codice di prima) */}
-      {/* ... mantengo tutto identico, solo gli eventi sono aggiornati con le foto vere ... */}
 
       {/* SEZIONE NERA */}
       {activeSection && (
@@ -254,7 +229,13 @@ export default function Home() {
           }}>
           <button onClick={() => setShowPhotoGallery(false)} style={{ position: "absolute", top: "30px", right: "30px", fontSize: "32px", background: "none", border: "none", color: "white", zIndex: 10 }}>×</button>
 
-          <img src={currentPhotos[currentPhotoIndex]} alt="Event photo" onContextMenu={(e) => { e.preventDefault(); downloadImage(currentPhotos[currentPhotoIndex], `ARREBATAO-${selectedEvent.date}-${selectedPhotoType}.jpg`); }} style={{ maxWidth: "92%", maxHeight: "85%", objectFit: "contain", borderRadius: "12px" }} />
+          <img 
+            src={currentPhotos[currentPhotoIndex]} 
+            alt="Event photo" 
+            onError={(e) => { (e.target as HTMLImageElement).src = "https://picsum.photos/id/1015/800/1200"; }} 
+            onContextMenu={(e) => { e.preventDefault(); downloadImage(currentPhotos[currentPhotoIndex], `ARREBATAO-${selectedEvent.date}-${selectedPhotoType}.jpg`); }}
+            style={{ maxWidth: "92%", maxHeight: "85%", objectFit: "contain", borderRadius: "12px" }} 
+          />
 
           <button onClick={() => downloadImage(currentPhotos[currentPhotoIndex], `ARREBATAO-${selectedEvent.date}-${selectedPhotoType}.jpg`)} style={{ position: "absolute", bottom: "30px", left: "30px", background: "rgba(255,255,255,0.1)", color: "white", border: "1px solid rgba(255,255,255,0.3)", padding: "8px 18px", borderRadius: "9999px", fontSize: "12px", letterSpacing: "1px", cursor: "pointer", zIndex: 10 }}>
             ↓ Scarica
