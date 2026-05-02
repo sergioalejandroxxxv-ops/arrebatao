@@ -21,7 +21,6 @@ export default function Home() {
 
   const selected = selectedIndex !== null ? events[selectedIndex] : null;
 
-  // ESC + lock scroll
   useEffect(() => {
     if (selectedIndex === null) return;
 
@@ -118,10 +117,9 @@ export default function Home() {
             zIndex: 0,
           }}
         >
-          <source src="/hero.mp4" type="video/mp4" />
+          <source src="/video.mp4" type="video/mp4" />
         </video>
 
-        {/* fade bottom video */}
         <div
           style={{
             position: "absolute",
@@ -176,11 +174,12 @@ export default function Home() {
               }}
             >
               <img
-                src={ev.flyer}
+                src={`/flyers/${ev.flyer}`}
                 style={{
                   width: "100%",
                   borderRadius: "12px",
                   transition: "0.3s",
+                  objectFit: "cover",
                 }}
               />
               <p
@@ -198,7 +197,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* MODAL GALLERY */}
+      {/* MODAL */}
       {selected && selectedIndex !== null && (
         <div
           onClick={() => setSelectedIndex(null)}
@@ -224,11 +223,12 @@ export default function Home() {
           }}
         >
           <img
-            src={selected.flyer}
+            src={`/flyers/${selected.flyer}`}
             style={{
               maxWidth: "90%",
               maxHeight: "80%",
               borderRadius: "12px",
+              objectFit: "contain",
             }}
           />
 
