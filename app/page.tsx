@@ -185,7 +185,7 @@ export default function Home() {
         </div>
       )}
 
-      {/* FOOTER (ripristinato completo) */}
+      {/* FOOTER */}
       <footer
         style={{
           padding: "40px 20px",
@@ -202,14 +202,11 @@ export default function Home() {
         .hero {
           height: 100vh;
           position: relative;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          text-align: center;
         }
 
         .hero-video {
           position: absolute;
+          inset: 0;
           width: 100%;
           height: 100%;
           object-fit: cover;
@@ -230,8 +227,13 @@ export default function Home() {
         }
 
         .hero-content {
-          position: relative;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
           z-index: 2;
+          text-align: center;
+          width: 100%;
         }
 
         .hero-title {
@@ -248,6 +250,10 @@ export default function Home() {
         }
 
         @media (max-width: 768px) {
+          .hero-video {
+            object-position: center top;
+          }
+
           .hero-title {
             font-size: 46px;
             letter-spacing: 8px;
