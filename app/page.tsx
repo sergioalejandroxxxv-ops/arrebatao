@@ -81,9 +81,7 @@ export default function Home() {
       >
         {["Event", "Venue", "Corporate", "Hotel", "Reserve", "FAQs"].map(
           (item) => (
-            <div key={item} style={{ cursor: "pointer" }}>
-              {item}
-            </div>
+            <div key={item}>{item}</div>
           )
         )}
       </div>
@@ -122,7 +120,6 @@ export default function Home() {
             >
               <img
                 src={`/flyers/${ev.flyer}`}
-                alt={ev.date}
                 style={{
                   width: "100%",
                   borderRadius: "12px",
@@ -174,7 +171,6 @@ export default function Home() {
         >
           <img
             src={`/flyers/${selected.flyer}`}
-            alt={selected.date}
             onClick={(e) => e.stopPropagation()}
             style={{
               maxWidth: "90%",
@@ -189,7 +185,7 @@ export default function Home() {
         </div>
       )}
 
-      {/* FOOTER */}
+      {/* FOOTER (ripristinato completo) */}
       <footer
         style={{
           padding: "40px 20px",
@@ -199,7 +195,7 @@ export default function Home() {
           opacity: 0.6,
         }}
       >
-        ©️ 2026 ARREBATAO Nightclub - All Rights Reserved
+        ©️ 2026 ARREBATAO Nightclub - All Rights Reserved • PRIVACY • TERMS • ACCESSIBILITY • COOKIE SETTINGS • COOKIE PREFERENCES
       </footer>
 
       <style jsx>{`
@@ -217,19 +213,17 @@ export default function Home() {
           width: 100%;
           height: 100%;
           object-fit: cover;
-          object-position: center;
           z-index: 0;
-          pointer-events: none;
         }
 
         .hero-fade {
           position: absolute;
           bottom: 0;
           width: 100%;
-          height: 20%;
+          height: 30%;
           background: linear-gradient(
             to top,
-            black 30%,
+            black 40%,
             transparent 100%
           );
           z-index: 1;
@@ -254,10 +248,6 @@ export default function Home() {
         }
 
         @media (max-width: 768px) {
-          .hero-video {
-            object-position: center top;
-          }
-
           .hero-title {
             font-size: 46px;
             letter-spacing: 8px;
