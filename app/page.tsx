@@ -91,62 +91,22 @@ export default function Home() {
       </div>
 
       {/* HERO */}
-      <section
-        style={{
-          height: "100vh",
-          position: "relative",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          textAlign: "center",
-        }}
-      >
+      <section className="hero">
         <video
           autoPlay
           muted
           loop
           playsInline
-          style={{
-            position: "absolute",
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
-            zIndex: 0,
-          }}
+          className="hero-video"
         >
           <source src="/video.mp4" type="video/mp4" />
         </video>
 
-        <div
-          style={{
-            position: "absolute",
-            bottom: 0,
-            width: "100%",
-            height: "18%",
-            background:
-              "linear-gradient(to top, black 25%, transparent 100%)",
-            zIndex: 1,
-          }}
-        />
+        <div className="hero-fade" />
 
-        <div style={{ zIndex: 2 }}>
-          <h1
-            style={{
-              fontSize: "78px", // +2 STEP DESKTOP
-              letterSpacing: "12px",
-              fontWeight: 300,
-            }}
-          >
-            ARREBATAO
-          </h1>
-          <p
-            style={{
-              marginTop: "12px",
-              fontSize: "18px",
-              letterSpacing: "5px",
-              opacity: 0.75,
-            }}
-          >
+        <div className="hero-content">
+          <h1 className="hero-title">ARREBATAO</h1>
+          <p className="hero-subtitle">
             Milan • Luxury Night Experience
           </p>
         </div>
@@ -191,7 +151,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* MODAL (SWIPE RIPRISTINATO) */}
+      {/* MODAL */}
       {selected && selectedIndex !== null && (
         <div
           onClick={() => setSelectedIndex(null)}
@@ -200,7 +160,8 @@ export default function Home() {
           }
           onTouchEnd={(e) => {
             if (!touchStartX.current) return;
-            const diff = e.changedTouches[0].clientX - touchStartX.current;
+            const diff =
+              e.changedTouches[0].clientX - touchStartX.current;
 
             if (diff > 50) prev();
             if (diff < -50) next();
@@ -243,6 +204,70 @@ export default function Home() {
       >
         © 2026 ARREBATAO Nightclub - All Rights Reserved • PRIVACY • TERMS • ACCESSIBILITY • COOKIE SETTINGS • COOKIE PREFERENCES
       </footer>
+
+      {/* RESPONSIVE STYLE */}
+      <style jsx>{`
+        .hero {
+          height: 100vh;
+          position: relative;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          text-align: center;
+        }
+
+        .hero-video {
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          z-index: 0;
+        }
+
+        .hero-fade {
+          position: absolute;
+          bottom: 0;
+          width: 100%;
+          height: 18%;
+          background: linear-gradient(
+            to top,
+            black 25%,
+            transparent 100%
+          );
+          z-index: 1;
+        }
+
+        .hero-content {
+          z-index: 2;
+        }
+
+        /* DESKTOP */
+        .hero-title {
+          font-size: 78px;
+          letter-spacing: 12px;
+          font-weight: 300;
+        }
+
+        .hero-subtitle {
+          margin-top: 12px;
+          font-size: 18px;
+          letter-spacing: 5px;
+          opacity: 0.75;
+        }
+
+        /* MOBILE */
+        @media (max-width: 768px) {
+          .hero-title {
+            font-size: 46px;
+            letter-spacing: 8px;
+          }
+
+          .hero-subtitle {
+            font-size: 13px;
+            letter-spacing: 3px;
+          }
+        }
+      `}</style>
     </main>
   );
 }
