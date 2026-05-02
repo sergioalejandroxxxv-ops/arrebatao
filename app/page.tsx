@@ -8,29 +8,69 @@ export default function Home() {
   const [showPhotoGallery, setShowPhotoGallery] = useState(false);
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
   const [showInfoModal, setShowInfoModal] = useState(false);
+  const [selectedPhotoType, setSelectedPhotoType] = useState<'standard' | 'experimental'>('standard');
   const touchStartX = useRef<number | null>(null);
 
   const navItems = ["Events", "Venue", "Corporate", "Hotel", "Reserve", "Faqs"];
   const footerItems = ["PRIVACY", "TERMS", "ACCESSIBILITY", "COOKIE SETTINGS", "COOKIE PREFERENCES"];
 
   const events = [
-    { id: 0, flyer: "event-01.jpeg", date: "Sabato 30 Maggio 2026", soldPercentage: 92, photos: ["https://picsum.photos/id/1015/800/1200", "https://picsum.photos/id/102/800/1200", "https://picsum.photos/id/1033/800/1200"] },
-    { id: 1, flyer: "event-02.jpeg", date: "Sabato 06 Giugno 2026", soldPercentage: 45, photos: ["https://picsum.photos/id/104/800/1200", "https://picsum.photos/id/106/800/1200", "https://picsum.photos/id/1074/800/1200"] },
-    { id: 2, flyer: "event-03.jpeg", date: "Sabato 13 Giugno 2026", soldPercentage: 78, photos: ["https://picsum.photos/id/1080/800/1200", "https://picsum.photos/id/1083/800/1200", "https://picsum.photos/id/1018/800/1200"] },
-    { id: 3, flyer: "event-04.jpeg", date: "Sabato 20 Giugno 2026", soldPercentage: 100, photos: ["https://picsum.photos/id/160/800/1200", "https://picsum.photos/id/201/800/1200", "https://picsum.photos/id/251/800/1200"] },
-    { id: 4, flyer: "event-05.jpeg", date: "Sabato 27 Giugno 2026", soldPercentage: 33, photos: ["https://picsum.photos/id/292/800/1200", "https://picsum.photos/id/312/800/1200", "https://picsum.photos/id/1016/800/1200"] },
-    { id: 5, flyer: "event-06.jpeg", date: "Sabato 04 Luglio 2026", soldPercentage: 65, photos: ["https://picsum.photos/id/1036/800/1200", "https://picsum.photos/id/1040/800/1200", "https://picsum.photos/id/1060/800/1200"] },
-    { id: 6, flyer: "event-07.jpeg", date: "Sabato 11 Luglio 2026", soldPercentage: 88, photos: ["https://picsum.photos/id/107/800/1200", "https://picsum.photos/id/108/800/1200", "https://picsum.photos/id/133/800/1200"] },
-    { id: 7, flyer: "event-08.jpeg", date: "Sabato 18 Luglio 2026", soldPercentage: 12, photos: ["https://picsum.photos/id/180/800/1200", "https://picsum.photos/id/201/800/1200", "https://picsum.photos/id/251/800/1200"] },
-    { id: 8, flyer: "event-09.jpeg", date: "Sabato 25 Luglio 2026", soldPercentage: 55, photos: ["https://picsum.photos/id/292/800/1200", "https://picsum.photos/id/312/800/1200", "https://picsum.photos/id/1016/800/1200"] },
+    { 
+      id: 0, flyer: "event-01.jpeg", date: "Sabato 30 Maggio 2026", soldPercentage: 92,
+      photosStandard: ["https://picsum.photos/id/1015/800/1200", "https://picsum.photos/id/102/800/1200", "https://picsum.photos/id/1033/800/1200"],
+      photosExperimental: ["https://picsum.photos/id/160/800/1200", "https://picsum.photos/id/201/800/1200", "https://picsum.photos/id/251/800/1200"]
+    },
+    { 
+      id: 1, flyer: "event-02.jpeg", date: "Sabato 06 Giugno 2026", soldPercentage: 45,
+      photosStandard: ["https://picsum.photos/id/104/800/1200", "https://picsum.photos/id/106/800/1200", "https://picsum.photos/id/1074/800/1200"],
+      photosExperimental: ["https://picsum.photos/id/180/800/1200", "https://picsum.photos/id/292/800/1200", "https://picsum.photos/id/312/800/1200"]
+    },
+    { 
+      id: 2, flyer: "event-03.jpeg", date: "Sabato 13 Giugno 2026", soldPercentage: 78,
+      photosStandard: ["https://picsum.photos/id/1080/800/1200", "https://picsum.photos/id/1083/800/1200", "https://picsum.photos/id/1018/800/1200"],
+      photosExperimental: ["https://picsum.photos/id/133/800/1200", "https://picsum.photos/id/160/800/1200", "https://picsum.photos/id/201/800/1200"]
+    },
+    { 
+      id: 3, flyer: "event-04.jpeg", date: "Sabato 20 Giugno 2026", soldPercentage: 100,
+      photosStandard: ["https://picsum.photos/id/160/800/1200", "https://picsum.photos/id/201/800/1200", "https://picsum.photos/id/251/800/1200"],
+      photosExperimental: ["https://picsum.photos/id/292/800/1200", "https://picsum.photos/id/312/800/1200", "https://picsum.photos/id/1016/800/1200"]
+    },
+    { 
+      id: 4, flyer: "event-05.jpeg", date: "Sabato 27 Giugno 2026", soldPercentage: 33,
+      photosStandard: ["https://picsum.photos/id/292/800/1200", "https://picsum.photos/id/312/800/1200", "https://picsum.photos/id/1016/800/1200"],
+      photosExperimental: ["https://picsum.photos/id/133/800/1200", "https://picsum.photos/id/180/800/1200", "https://picsum.photos/id/251/800/1200"]
+    },
+    { 
+      id: 5, flyer: "event-06.jpeg", date: "Sabato 04 Luglio 2026", soldPercentage: 65,
+      photosStandard: ["https://picsum.photos/id/1036/800/1200", "https://picsum.photos/id/1040/800/1200", "https://picsum.photos/id/1060/800/1200"],
+      photosExperimental: ["https://picsum.photos/id/160/800/1200", "https://picsum.photos/id/201/800/1200", "https://picsum.photos/id/292/800/1200"]
+    },
+    { 
+      id: 6, flyer: "event-07.jpeg", date: "Sabato 11 Luglio 2026", soldPercentage: 88,
+      photosStandard: ["https://picsum.photos/id/107/800/1200", "https://picsum.photos/id/108/800/1200", "https://picsum.photos/id/133/800/1200"],
+      photosExperimental: ["https://picsum.photos/id/180/800/1200", "https://picsum.photos/id/251/800/1200", "https://picsum.photos/id/312/800/1200"]
+    },
+    { 
+      id: 7, flyer: "event-08.jpeg", date: "Sabato 18 Luglio 2026", soldPercentage: 12,
+      photosStandard: ["https://picsum.photos/id/180/800/1200", "https://picsum.photos/id/201/800/1200", "https://picsum.photos/id/251/800/1200"],
+      photosExperimental: ["https://picsum.photos/id/292/800/1200", "https://picsum.photos/id/312/800/1200", "https://picsum.photos/id/1016/800/1200"]
+    },
+    { 
+      id: 8, flyer: "event-09.jpeg", date: "Sabato 25 Luglio 2026", soldPercentage: 55,
+      photosStandard: ["https://picsum.photos/id/292/800/1200", "https://picsum.photos/id/312/800/1200", "https://picsum.photos/id/1016/800/1200"],
+      photosExperimental: ["https://picsum.photos/id/133/800/1200", "https://picsum.photos/id/160/800/1200", "https://picsum.photos/id/180/800/1200"]
+    },
   ];
 
   const selectedEvent = selectedIndex !== null ? events[selectedIndex] : null;
+  const currentPhotos = selectedEvent 
+    ? (selectedPhotoType === 'standard' ? selectedEvent.photosStandard : selectedEvent.photosExperimental) 
+    : [];
 
-  const next = useCallback(() => { /* ... same as before */ }, []);
-  const prev = useCallback(() => { /* ... same as before */ }, []);
+  const nextPhoto = () => setCurrentPhotoIndex((prev) => (prev + 1) % currentPhotos.length);
+  const prevPhoto = () => setCurrentPhotoIndex((prev) => (prev - 1 + currentPhotos.length) % currentPhotos.length);
 
-  // ESC + body lock for modals
+  // ESC + body lock
   useEffect(() => {
     if (!selectedIndex && !activeSection && !showPhotoGallery && !showInfoModal) return;
 
@@ -41,10 +81,8 @@ export default function Home() {
         else if (selectedIndex !== null) setSelectedIndex(null);
         else setActiveSection(null);
       }
-      if (showPhotoGallery) {
-        if (e.key === "ArrowRight") setCurrentPhotoIndex((prev) => (prev + 1) % (selectedEvent?.photos.length || 1));
-        if (e.key === "ArrowLeft") setCurrentPhotoIndex((prev) => (prev - 1 + (selectedEvent?.photos.length || 1)) % (selectedEvent?.photos.length || 1));
-      }
+      if (showPhotoGallery && e.key === "ArrowRight") nextPhoto();
+      if (showPhotoGallery && e.key === "ArrowLeft") prevPhoto();
     };
 
     document.body.style.overflow = "hidden";
@@ -53,7 +91,7 @@ export default function Home() {
       window.removeEventListener("keydown", handleKeyDown);
       document.body.style.overflow = "visible";
     };
-  }, [selectedIndex, activeSection, showPhotoGallery, showInfoModal, selectedEvent]);
+  }, [selectedIndex, activeSection, showPhotoGallery, showInfoModal]);
 
   const downloadImage = (src: string, filename: string) => {
     const link = document.createElement("a");
@@ -64,21 +102,23 @@ export default function Home() {
     document.body.removeChild(link);
   };
 
-  // ==================== RENDER ====================
-
   return (
     <main style={{ background: "black", color: "white", minHeight: "100vh", overflowX: "hidden", fontFamily: "system-ui, -apple-system, sans-serif" }}>
 
       {/* NAV */}
-      <div style={{ position: "fixed", top: "20px", right: "20px", zIndex: 1000, display: "flex", gap: "18px", fontSize: "12px", letterSpacing: "2px", textTransform: "uppercase", fontWeight: 300, overflowX: "auto", scrollbarWidth: "none" }}>
+      <div style={{ position: "fixed", top: "20px", right: "20px", zIndex: 1000, display: "flex", gap: "18px", fontSize: "12px", letterSpacing: "2px", textTransform: "uppercase", fontWeight: 300 }}>
         {navItems.map((item) => (
-          <button key={item} onClick={() => setActiveSection(item)} style={{ cursor: "pointer", opacity: 0.8, background: "none", border: "none", color: "inherit", font: "inherit", padding: 0, flexShrink: 0, whiteSpace: "nowrap" }}>
+          <button 
+            key={item} 
+            onClick={() => setActiveSection(item)}
+            style={{ cursor: "pointer", opacity: 0.8, background: "none", border: "none", color: "inherit", font: "inherit", padding: 0, flexShrink: 0, whiteSpace: "nowrap" }}
+          >
             {item}
           </button>
         ))}
       </div>
 
-      {/* HERO (unchanged) */}
+      {/* HERO */}
       <section style={{ position: "relative", height: "100vh", overflow: "hidden" }}>
         <video autoPlay muted loop playsInline preload="metadata" aria-hidden="true" style={{ position: "absolute", width: "100%", height: "100%", objectFit: "cover" }}>
           <source src="/video.mp4" type="video/mp4" />
@@ -120,50 +160,50 @@ export default function Home() {
       <footer style={{ padding: "40px 20px", borderTop: "1px solid rgba(255,255,255,0.1)", fontSize: "11px", opacity: 0.6, textAlign: "center", letterSpacing: "1px" }}>
         © 2026 ARREBATAO Nightclub - All Rights Reserved.{" "}
         {footerItems.map((item, i) => (
-          <span key={i} onClick={() => setActiveSection(item)} style={{ cursor: "pointer" }}>
+          <button 
+            key={i} 
+            onClick={() => setActiveSection(item)}
+            style={{ background: "none", border: "none", color: "inherit", cursor: "pointer", font: "inherit", padding: 0 }}
+          >
             {item}{i < footerItems.length - 1 ? " • " : ""}
-          </span>
+          </button>
         ))}
       </footer>
 
-      {/* ==================== SEZIONE NERA GENERICA (Nav + Footer) ==================== */}
+      {/* SEZIONE NERA (Nav + Footer) */}
       {activeSection && (
         <div style={{ position: "fixed", inset: 0, background: "black", zIndex: 2000, overflowY: "auto" }}>
           <div style={{ padding: "40px 20px", maxWidth: "800px", margin: "0 auto" }}>
-            {/* Header */}
             <div style={{ textAlign: "center", marginBottom: "40px" }}>
               <div style={{ fontSize: "14px", letterSpacing: "3px", opacity: 0.6 }}>ARREBATAO</div>
             </div>
 
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "30px" }}>
-              <div>
-                <div style={{ fontSize: "42px", fontWeight: 200, letterSpacing: "2px" }}>{activeSection}</div>
-              </div>
-              <button onClick={() => setActiveSection(null)} style={{ fontSize: "28px", background: "none", border: "none", color: "white", cursor: "pointer" }}>×</button>
+              <div style={{ fontSize: "42px", fontWeight: 200, letterSpacing: "2px" }}>{activeSection}</div>
+              <button onClick={() => setActiveSection(null)} style={{ fontSize: "32px", background: "none", border: "none", color: "white", cursor: "pointer" }}>×</button>
             </div>
 
-            {/* Sub navigation */}
             <div style={{ display: "flex", flexWrap: "wrap", gap: "12px", marginBottom: "60px", opacity: 0.7, fontSize: "13px", letterSpacing: "1px" }}>
               {[...navItems, ...footerItems].filter(item => item !== activeSection).map((item, i) => (
-                <span key={i} onClick={() => setActiveSection(item)} style={{ cursor: "pointer" }}>{item}</span>
+                <button key={i} onClick={() => setActiveSection(item)} style={{ background: "none", border: "none", color: "inherit", cursor: "pointer", font: "inherit", padding: 0 }}>
+                  {item}
+                </button>
               ))}
             </div>
 
-            {/* Contenuto placeholder */}
             <div style={{ fontSize: "18px", lineHeight: "1.6", opacity: 0.85 }}>
               <p>Sezione <strong>{activeSection}</strong> in arrivo.</p>
-              <p style={{ marginTop: "20px", opacity: 0.6 }}>Contenuti esclusivi, foto, informazioni e prenotazioni saranno disponibili a breve.</p>
+              <p style={{ marginTop: "20px", opacity: 0.6 }}>Contenuti esclusivi, foto e informazioni saranno disponibili a breve.</p>
             </div>
           </div>
         </div>
       )}
 
-      {/* ==================== EVENT DETAIL VIEW ==================== */}
+      {/* EVENT DETAIL VIEW */}
       {selectedEvent && (
         <div style={{ position: "fixed", inset: 0, background: "black", zIndex: 2000, overflowY: "auto" }}>
           <div style={{ maxWidth: "900px", margin: "0 auto", padding: "40px 20px" }}>
             
-            {/* Header */}
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "40px" }}>
               <div>
                 <div style={{ fontSize: "14px", letterSpacing: "3px", opacity: 0.6 }}>ARREBATAO</div>
@@ -175,13 +215,7 @@ export default function Home() {
             {/* TICKETING */}
             <div style={{ marginBottom: "60px" }}>
               <div style={{ fontSize: "13px", letterSpacing: "2px", marginBottom: "12px", opacity: 0.7 }}>TICKETING</div>
-              <div style={{ 
-                height: "12px", 
-                background: "#222", 
-                borderRadius: "9999px", 
-                overflow: "hidden",
-                position: "relative"
-              }}>
+              <div style={{ height: "12px", background: "#222", borderRadius: "9999px", overflow: "hidden" }}>
                 <div style={{ 
                   height: "100%", 
                   width: `${selectedEvent.soldPercentage}%`, 
@@ -196,33 +230,35 @@ export default function Home() {
               </div>
             </div>
 
-            {/* PHOTO */}
-            <div 
-              onClick={() => { setCurrentPhotoIndex(0); setShowPhotoGallery(true); }}
-              style={{ 
-                marginBottom: "60px", 
-                background: "#111", 
-                padding: "40px 20px", 
-                borderRadius: "16px", 
-                textAlign: "center",
-                cursor: "pointer"
-              }}
-            >
-              <div style={{ fontSize: "13px", letterSpacing: "2px", marginBottom: "12px", opacity: 0.7 }}>PHOTO</div>
-              <div style={{ fontSize: "42px", fontWeight: 200 }}>Apri Galleria</div>
-              <div style={{ fontSize: "13px", opacity: 0.5, marginTop: "8px" }}>Swipe per scorrere • Long press per scaricare</div>
+            {/* PHOTO - DUE OPZIONI */}
+            <div style={{ marginBottom: "60px" }}>
+              <div style={{ fontSize: "13px", letterSpacing: "2px", marginBottom: "16px", opacity: 0.7 }}>PHOTO</div>
+              
+              <div style={{ display: "flex", gap: "16px" }}>
+                {/* Ph. Standard */}
+                <div 
+                  onClick={() => { setSelectedPhotoType('standard'); setCurrentPhotoIndex(0); setShowPhotoGallery(true); }}
+                  style={{ flex: 1, background: "#111", padding: "32px 20px", borderRadius: "16px", textAlign: "center", cursor: "pointer" }}
+                >
+                  <div style={{ fontSize: "28px", fontWeight: 200 }}>Ph.</div>
+                  <div style={{ fontSize: "11px", opacity: 0.6, marginTop: "4px", letterSpacing: "1px" }}>Standard</div>
+                </div>
+
+                {/* Gfx Experimental */}
+                <div 
+                  onClick={() => { setSelectedPhotoType('experimental'); setCurrentPhotoIndex(0); setShowPhotoGallery(true); }}
+                  style={{ flex: 1, background: "#111", padding: "32px 20px", borderRadius: "16px", textAlign: "center", cursor: "pointer" }}
+                >
+                  <div style={{ fontSize: "28px", fontWeight: 200 }}>Gfx</div>
+                  <div style={{ fontSize: "11px", opacity: 0.6, marginTop: "4px", letterSpacing: "1px" }}>Experimental</div>
+                </div>
+              </div>
             </div>
 
             {/* INFO */}
             <div 
               onClick={() => setShowInfoModal(true)}
-              style={{ 
-                background: "#111", 
-                padding: "40px 20px", 
-                borderRadius: "16px", 
-                textAlign: "center",
-                cursor: "pointer"
-              }}
+              style={{ background: "#111", padding: "40px 20px", borderRadius: "16px", textAlign: "center", cursor: "pointer" }}
             >
               <div style={{ fontSize: "13px", letterSpacing: "2px", marginBottom: "12px", opacity: 0.7 }}>INFO</div>
               <div style={{ fontSize: "42px", fontWeight: 200 }}>Contatta l’organizzazione</div>
@@ -239,22 +275,22 @@ export default function Home() {
           onTouchEnd={(e) => {
             if (!touchStartX.current) return;
             const diff = e.changedTouches[0].clientX - touchStartX.current;
-            if (diff > 60) setCurrentPhotoIndex((prev) => (prev - 1 + selectedEvent.photos.length) % selectedEvent.photos.length);
-            if (diff < -60) setCurrentPhotoIndex((prev) => (prev + 1) % selectedEvent.photos.length);
+            if (diff > 60) prevPhoto();
+            if (diff < -60) nextPhoto();
             touchStartX.current = null;
           }}
         >
           <button onClick={() => setShowPhotoGallery(false)} style={{ position: "absolute", top: "30px", right: "30px", fontSize: "32px", background: "none", border: "none", color: "white", zIndex: 10 }}>×</button>
 
           <img 
-            src={selectedEvent.photos[currentPhotoIndex]} 
+            src={currentPhotos[currentPhotoIndex]} 
             alt="Event photo"
-            onContextMenu={(e) => { e.preventDefault(); downloadImage(selectedEvent.photos[currentPhotoIndex], `ARREBATAO-${selectedEvent.date}-photo.jpg`); }}
+            onContextMenu={(e) => { e.preventDefault(); downloadImage(currentPhotos[currentPhotoIndex], `ARREBATAO-${selectedEvent.date}-${selectedPhotoType}.jpg`); }}
             style={{ maxWidth: "92%", maxHeight: "85%", objectFit: "contain", borderRadius: "12px" }} 
           />
 
           <div style={{ position: "absolute", bottom: "40px", fontSize: "13px", opacity: 0.6 }}>
-            {currentPhotoIndex + 1} / {selectedEvent.photos.length} • Swipe o usa le frecce
+            {currentPhotoIndex + 1} / {currentPhotos.length} • {selectedPhotoType === 'standard' ? 'Standard' : 'Experimental'}
           </div>
         </div>
       )}
@@ -264,14 +300,8 @@ export default function Home() {
         <div onClick={() => setShowInfoModal(false)} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.85)", zIndex: 4000, display: "flex", alignItems: "center", justifyContent: "center" }}>
           <div onClick={(e) => e.stopPropagation()} style={{ background: "#111", padding: "50px 40px", borderRadius: "20px", width: "90%", maxWidth: "380px", textAlign: "center" }}>
             <div style={{ fontSize: "22px", marginBottom: "30px", fontWeight: 200 }}>Come vuoi contattarci?</div>
-            
-            <a href="mailto:info@arrebatao.com" style={{ display: "block", padding: "18px", background: "#222", borderRadius: "12px", marginBottom: "12px", color: "white", textDecoration: "none" }}>
-              ✉️ E-mail
-            </a>
-            
-            <a href="https://wa.me/393331234567" target="_blank" style={{ display: "block", padding: "18px", background: "#222", borderRadius: "12px", color: "white", textDecoration: "none" }}>
-              💬 WhatsApp
-            </a>
+            <a href="mailto:info@arrebatao.com" style={{ display: "block", padding: "18px", background: "#222", borderRadius: "12px", marginBottom: "12px", color: "white", textDecoration: "none" }}>✉️ E-mail</a>
+            <a href="https://wa.me/393331234567" target="_blank" style={{ display: "block", padding: "18px", background: "#222", borderRadius: "12px", color: "white", textDecoration: "none" }}>💬 WhatsApp</a>
           </div>
         </div>
       )}
