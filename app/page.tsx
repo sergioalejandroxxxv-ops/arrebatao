@@ -86,12 +86,17 @@ export default function Home() {
         }}>
 
           <h1 style={{
-  fontSize: "clamp(24px, 7vw, 72px)",
-  letterSpacing: "clamp(2px, 1vw, 18px)",
+  fontSize: "clamp(22px, 6vw, 72px)",
+  letterSpacing: "0.08em",
   fontWeight: 200,
   textTransform: "uppercase",
   lineHeight: "1.1",
-  textAlign: "center"
+  textAlign: "center",
+  width: "100%",
+  maxWidth: "100%",
+  whiteSpace: "normal",
+  overflowWrap: "break-word",
+  wordBreak: "break-word"
 }}>
   ARREBATAO
 </h1>
