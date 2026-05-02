@@ -1,32 +1,60 @@
 "use client";
-import { useState } from "react";
+
+import { useState, useEffect, useRef } from "react";
 
 export default function Home() {
-  const [selected, setSelected] = useState<string | null>(null);
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
-  const flyers = [
-    "event-01.jpeg",
-    "event-02.jpeg",
-    "event-03.jpeg",
-    "event-04.jpeg",
-    "event-05.jpeg",
-    "event-06.jpeg",
-    "event-07.jpeg",
-    "event-08.jpeg",
-    "event-09.jpeg",
+  const events = [
+    { flyer: "event-01.jpeg", date: "Sabato 30 Maggio 2026" },
+    { flyer: "event-02.jpeg", date: "Sabato 06 Giugno 2026" },
+    { flyer: "event-03.jpeg", date: "Sabato 13 Giugno 2026" },
+    { flyer: "event-04.jpeg", date: "Sabato 20 Giugno 2026" },
+    { flyer: "event-05.jpeg", date: "Sabato 27 Giugno 2026" },
+    { flyer: "event-06.jpeg", date: "Sabato 04 Luglio 2026" },
+    { flyer: "event-07.jpeg", date: "Sabato 11 Luglio 2026" },
+    { flyer: "event-08.jpeg", date: "Sabato 18 Luglio 2026" },
+    { flyer: "event-09.jpeg", date: "Sabato 25 Luglio 2026" },
   ];
 
-  const dates = [
-    "Sabato 30 Maggio 2026",
-    "Sabato 06 Giugno 2026",
-    "Sabato 13 Giugno 2026",
-    "Sabato 20 Giugno 2026",
-    "Sabato 27 Giugno 2026",
-    "Sabato 04 Luglio 2026",
-    "Sabato 11 Luglio 2026",
-    "Sabato 18 Luglio 2026",
-    "Sabato 25 Luglio 2026",
-  ];
+  const touchStartX = useRef<number | null>(null);
+
+  const selected = selectedIndex !== null ? events[selectedIndex] : null;
+
+  // ESC + lock scroll
+  useEffect(() => {
+    if (selectedIndex === null) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setSelectedIndex(null);
+      if (e.key === "ArrowRight") next();
+      if (e.key === "ArrowLeft") prev();
+    };
+
+    const original = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = original;
+    };
+  }, [selectedIndex]);
+
+  const next = () => {
+    setSelectedIndex((prev) => {
+      if (prev === null) return 0;
+      return (prev + 1) % events.length;
+    });
+  };
+
+  const prev = () => {
+    setSelectedIndex((prev) => {
+      if (prev === null) return 0;
+      return (prev - 1 + events.length) % events.length;
+    });
+  };
 
   return (
     <main
@@ -39,8 +67,7 @@ export default function Home() {
         fontFamily: "system-ui, -apple-system, sans-serif",
       }}
     >
-
-      {/* NAVBAR */}
+      {/* NAV */}
       <div
         style={{
           position: "fixed",
@@ -53,18 +80,31 @@ export default function Home() {
           letterSpacing: "2px",
           textTransform: "uppercase",
           fontWeight: 300,
+          overflowX: "auto",
+          WebkitOverflowScrolling: "touch",
+          scrollbarWidth: "none",
         }}
       >
-        {["Events", "Venue", "Corporate", "Hotel", "Reserve", "Faqs"].map((item) => (
-          <span key={item} style={{ cursor: "pointer", opacity: 0.8 }}>
-            {item}
-          </span>
-        ))}
+        {["Event", "Venue", "Corporate", "Hotel", "Reserve", "FAQs"].map(
+          (item) => (
+            <div key={item} style={{ whiteSpace: "nowrap", cursor: "pointer" }}>
+              {item}
+            </div>
+          )
+        )}
       </div>
 
       {/* HERO */}
-      <section style={{ position: "relative", height: "100vh", overflow: "hidden" }}>
-
+      <section
+        style={{
+          height: "100vh",
+          position: "relative",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          textAlign: "center",
+        }}
+      >
         <video
           autoPlay
           muted
@@ -75,155 +115,136 @@ export default function Home() {
             width: "100%",
             height: "100%",
             objectFit: "cover",
+            zIndex: 0,
           }}
         >
-          <source src="/video.mp4" type="video/mp4" />
+          <source src="/hero.mp4" type="video/mp4" />
         </video>
 
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            background: "rgba(0,0,0,0.55)",
-          }}
-        />
-
-        <div
-          style={{
-            position: "relative",
-            zIndex: 2,
-            textAlign: "center",
-            top: "42%",
-          }}
-        >
-          <h1
-            style={{
-              fontSize: "72px",
-              letterSpacing: "18px",
-              fontWeight: 200,
-              textTransform: "uppercase",
-            }}
-          >
-            ARREBATAO
-          </h1>
-
-          <p style={{ marginTop: "12px", fontSize: "16px", opacity: 0.8 }}>
-            Milan • Luxury Night Experience
-          </p>
-        </div>
-
-        {/* 🔥 DISSOLVENZA TRA HERO E FLYERS */}
+        {/* fade bottom video */}
         <div
           style={{
             position: "absolute",
             bottom: 0,
-            left: 0,
-            right: 0,
-            height: "180px",
+            width: "100%",
+            height: "40%",
             background:
-              "linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 100%)",
-            zIndex: 3,
+              "linear-gradient(to top, black 10%, transparent 100%)",
+            zIndex: 1,
           }}
         />
 
-      </section>
-
-      {/* FLYERS */}
-      <section style={{ padding: "80px 0 60px 20px", position: "relative" }}>
-
-        <div
-          style={{
-            display: "flex",
-            gap: "18px",
-            overflowX: "auto",
-            paddingRight: "20px",
-            scrollSnapType: "x mandatory",
-            WebkitOverflowScrolling: "touch",
-            scrollbarWidth: "none",
-          }}
-        >
-
-          {flyers.map((img, index) => (
-            <div
-              key={index}
-              style={{
-                minWidth: "260px",
-                scrollSnapAlign: "start",
-              }}
-            >
-
-              <div
-                onClick={() => setSelected(img)}
-                style={{
-                  width: "100%",
-                  aspectRatio: "9 / 16",
-                  borderRadius: "16px",
-                  overflow: "hidden",
-                  cursor: "pointer",
-                }}
-              >
-                <img
-                  src={`/flyers/${img}`}
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    objectFit: "cover",
-                  }}
-                />
-              </div>
-
-              <p
-                style={{
-                  marginTop: "10px",
-                  fontSize: "13px",
-                  opacity: 0.7,
-                  textAlign: "center",
-                  letterSpacing: "1px",
-                }}
-              >
-                {dates[index]}
-              </p>
-
-            </div>
-          ))}
-
+        <div style={{ zIndex: 2 }}>
+          <h1
+            style={{
+              fontSize: "60px",
+              letterSpacing: "6px",
+              fontWeight: 300,
+            }}
+          >
+            ARREBATAO
+          </h1>
+          <p
+            style={{
+              marginTop: "10px",
+              fontSize: "14px",
+              letterSpacing: "3px",
+              opacity: 0.7,
+            }}
+          >
+            Milan • Luxury Night Experience
+          </p>
         </div>
       </section>
 
-      {/* MODAL */}
-      {selected && (
+      {/* FLYERS */}
+      <section style={{ padding: "60px 20px" }}>
         <div
-          onClick={() => setSelected(null)}
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
+            gap: "20px",
+          }}
+        >
+          {events.map((ev, i) => (
+            <div
+              key={i}
+              onClick={() => setSelectedIndex(i)}
+              style={{
+                cursor: "pointer",
+                textAlign: "center",
+              }}
+            >
+              <img
+                src={ev.flyer}
+                style={{
+                  width: "100%",
+                  borderRadius: "12px",
+                  transition: "0.3s",
+                }}
+              />
+              <p
+                style={{
+                  marginTop: "10px",
+                  fontSize: "12px",
+                  letterSpacing: "1px",
+                  opacity: 0.8,
+                }}
+              >
+                {ev.date}
+              </p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* MODAL GALLERY */}
+      {selected && selectedIndex !== null && (
+        <div
+          onClick={() => setSelectedIndex(null)}
+          onTouchStart={(e) =>
+            (touchStartX.current = e.touches[0].clientX)
+          }
+          onTouchEnd={(e) => {
+            if (!touchStartX.current) return;
+            const diff = e.changedTouches[0].clientX - touchStartX.current;
+
+            if (diff > 50) prev();
+            if (diff < -50) next();
+          }}
           style={{
             position: "fixed",
             inset: 0,
-            zIndex: 999,
+            background: "rgba(0,0,0,0.95)",
             display: "flex",
-            justifyContent: "center",
             alignItems: "center",
-            background: "rgba(0,0,0,0.5)",
-            backdropFilter: "blur(16px)",
+            justifyContent: "center",
+            zIndex: 2000,
+            flexDirection: "column",
           }}
         >
-          <div
-            onClick={(e) => e.stopPropagation()}
+          <img
+            src={selected.flyer}
             style={{
-              width: "90%",
-              maxWidth: "520px",
-              aspectRatio: "9 / 16",
-              borderRadius: "18px",
-              overflow: "hidden",
+              maxWidth: "90%",
+              maxHeight: "80%",
+              borderRadius: "12px",
+            }}
+          />
+
+          <p
+            style={{
+              marginTop: "20px",
+              fontSize: "14px",
+              letterSpacing: "2px",
             }}
           >
-            <img
-              src={`/flyers/${selected}`}
-              style={{
-                width: "100%",
-                height: "100%",
-                objectFit: "cover",
-              }}
-            />
-          </div>
+            {selected.date}
+          </p>
+
+          <p style={{ fontSize: "10px", opacity: 0.5, marginTop: "5px" }}>
+            Swipe or use arrows
+          </p>
         </div>
       )}
 
@@ -231,18 +252,14 @@ export default function Home() {
       <footer
         style={{
           padding: "40px 20px",
-          marginTop: "60px",
-          borderTop: "1px solid rgba(255,255,255,0.1)",
-          fontSize: "11px",
-          opacity: 0.6,
           textAlign: "center",
-          letterSpacing: "1px",
+          fontSize: "10px",
+          letterSpacing: "2px",
+          opacity: 0.6,
         }}
       >
-        © 2026 ARREBATAO Nightclub - All Rights Reserved. {" "}
-        PRIVACY • TERMS • ACCESSIBILITY • COOKIE SETTINGS • COOKIE PREFERENCES
+        2026 ARREBATAO Nightclub - All Rights Reserved • PRIVACY • TERMS • ACCESSIBILITY
       </footer>
-
     </main>
   );
 }
