@@ -195,18 +195,20 @@ export default function Home() {
           opacity: 0.6,
         }}
       >
-        ©️ 2026 ARREBATAO Nightclub - All Rights Reserved • PRIVACY • TERMS • ACCESSIBILITY • COOKIE SETTINGS • COOKIE PREFERENCES
+        <span style={{ color: "inherit" }}>©</span> 2026 ARREBATAO Nightclub - All Rights Reserved • PRIVACY • TERMS • ACCESSIBILITY • COOKIE SETTINGS • COOKIE PREFERENCES
       </footer>
 
       <style jsx>{`
         .hero {
           height: 100vh;
           position: relative;
+          overflow: hidden;
         }
 
         .hero-video {
           position: absolute;
-          inset: 0;
+          top: 0;
+          left: 0;
           width: 100%;
           height: 100%;
           object-fit: cover;
@@ -216,6 +218,7 @@ export default function Home() {
         .hero-fade {
           position: absolute;
           bottom: 0;
+          left: 0;
           width: 100%;
           height: 30%;
           background: linear-gradient(
@@ -224,6 +227,7 @@ export default function Home() {
             transparent 100%
           );
           z-index: 1;
+          pointer-events: none;
         }
 
         .hero-content {
@@ -234,12 +238,14 @@ export default function Home() {
           z-index: 2;
           text-align: center;
           width: 100%;
+          pointer-events: none;
         }
 
         .hero-title {
           font-size: 78px;
           letter-spacing: 12px;
           font-weight: 300;
+          margin: 0;
         }
 
         .hero-subtitle {
