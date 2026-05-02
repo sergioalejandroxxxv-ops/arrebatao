@@ -11,7 +11,7 @@ export default function Home() {
   const [selectedPhotoType, setSelectedPhotoType] = useState<'standard' | 'experimental'>('standard');
   const touchStartX = useRef<number | null>(null);
 
-  const navItems = ["Events", "Venue", "Corporate", "Hotel", "Reserve", "Faqs"];
+  const navItems = ["Events", "Venue", "Corporate", "Hotel", "Reserve", "FAQs"];
   const footerItems = ["PRIVACY", "TERMS", "ACCESSIBILITY", "COOKIE SETTINGS", "COOKIE PREFERENCES"];
 
   const events = [
@@ -70,7 +70,6 @@ export default function Home() {
   const nextPhoto = () => setCurrentPhotoIndex((prev) => (prev + 1) % currentPhotos.length);
   const prevPhoto = () => setCurrentPhotoIndex((prev) => (prev - 1 + currentPhotos.length) % currentPhotos.length);
 
-  // ESC + body lock
   useEffect(() => {
     if (!selectedIndex && !activeSection && !showPhotoGallery && !showInfoModal) return;
 
@@ -170,7 +169,7 @@ export default function Home() {
         ))}
       </footer>
 
-      {/* SEZIONE NERA (Nav + Footer) */}
+      {/* SEZIONE NERA */}
       {activeSection && (
         <div style={{ position: "fixed", inset: 0, background: "black", zIndex: 2000, overflowY: "auto" }}>
           <div style={{ padding: "40px 20px", maxWidth: "800px", margin: "0 auto" }}>
@@ -235,34 +234,32 @@ export default function Home() {
               <div style={{ fontSize: "13px", letterSpacing: "2px", marginBottom: "16px", opacity: 0.7 }}>PHOTO</div>
               
               <div style={{ display: "flex", gap: "16px" }}>
-                {/* Ph. Standard */}
-                <div 
+                <button 
                   onClick={() => { setSelectedPhotoType('standard'); setCurrentPhotoIndex(0); setShowPhotoGallery(true); }}
-                  style={{ flex: 1, background: "#111", padding: "32px 20px", borderRadius: "16px", textAlign: "center", cursor: "pointer" }}
+                  style={{ flex: 1, background: "#111", padding: "32px 20px", borderRadius: "16px", textAlign: "center", border: "none", color: "white", cursor: "pointer" }}
                 >
                   <div style={{ fontSize: "28px", fontWeight: 200 }}>Ph.</div>
                   <div style={{ fontSize: "11px", opacity: 0.6, marginTop: "4px", letterSpacing: "1px" }}>Standard</div>
-                </div>
+                </button>
 
-                {/* Gfx Experimental */}
-                <div 
+                <button 
                   onClick={() => { setSelectedPhotoType('experimental'); setCurrentPhotoIndex(0); setShowPhotoGallery(true); }}
-                  style={{ flex: 1, background: "#111", padding: "32px 20px", borderRadius: "16px", textAlign: "center", cursor: "pointer" }}
+                  style={{ flex: 1, background: "#111", padding: "32px 20px", borderRadius: "16px", textAlign: "center", border: "none", color: "white", cursor: "pointer" }}
                 >
                   <div style={{ fontSize: "28px", fontWeight: 200 }}>Gfx</div>
                   <div style={{ fontSize: "11px", opacity: 0.6, marginTop: "4px", letterSpacing: "1px" }}>Experimental</div>
-                </div>
+                </button>
               </div>
             </div>
 
             {/* INFO */}
-            <div 
+            <button 
               onClick={() => setShowInfoModal(true)}
-              style={{ background: "#111", padding: "40px 20px", borderRadius: "16px", textAlign: "center", cursor: "pointer" }}
+              style={{ width: "100%", background: "#111", padding: "40px 20px", borderRadius: "16px", textAlign: "center", border: "none", color: "white", cursor: "pointer" }}
             >
               <div style={{ fontSize: "13px", letterSpacing: "2px", marginBottom: "12px", opacity: 0.7 }}>INFO</div>
               <div style={{ fontSize: "42px", fontWeight: 200 }}>Contatta l’organizzazione</div>
-            </div>
+            </button>
           </div>
         </div>
       )}
@@ -289,7 +286,28 @@ export default function Home() {
             style={{ maxWidth: "92%", maxHeight: "85%", objectFit: "contain", borderRadius: "12px" }} 
           />
 
-          <div style={{ position: "absolute", bottom: "40px", fontSize: "13px", opacity: 0.6 }}>
+          {/* TASTO DOWNLOAD IN BASSO A SINISTRA */}
+          <button 
+            onClick={() => downloadImage(currentPhotos[currentPhotoIndex], `ARREBATAO-${selectedEvent.date}-${selectedPhotoType}.jpg`)}
+            style={{
+              position: "absolute",
+              bottom: "30px",
+              left: "30px",
+              background: "rgba(255,255,255,0.1)",
+              color: "white",
+              border: "1px solid rgba(255,255,255,0.3)",
+              padding: "8px 18px",
+              borderRadius: "9999px",
+              fontSize: "12px",
+              letterSpacing: "1px",
+              cursor: "pointer",
+              zIndex: 10
+            }}
+          >
+            ↓ Scarica
+          </button>
+
+          <div style={{ position: "absolute", bottom: "40px", fontSize: "13px", opacity: 0.6, right: "30px" }}>
             {currentPhotoIndex + 1} / {currentPhotos.length} • {selectedPhotoType === 'standard' ? 'Standard' : 'Experimental'}
           </div>
         </div>
